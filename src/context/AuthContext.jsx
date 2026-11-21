@@ -71,6 +71,17 @@ useEffect(() => {
   };
 }, []);
 
+useEffect(() => {
+  const handleSessionExpired = () => {
+    logoutUser();
+  };
+
+  window.addEventListener("auth:session-expired", handleSessionExpired);
+
+  return () => {
+    window.removeEventListener("auth:session-expired", handleSessionExpired);
+  };
+}, []);
   return (
     <AuthContext.Provider
       value={{

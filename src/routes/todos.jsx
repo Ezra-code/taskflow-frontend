@@ -1,6 +1,6 @@
-
 import { createFileRoute } from "@tanstack/react-router";
 import { useTodos } from "../hooks/useTodos";
+import CreateTodoForm from "../components/todo/CreateTodoForm";
 
 export const Route = createFileRoute("/todos")({
   component: TodosPage,
@@ -31,10 +31,8 @@ function TodosPage() {
   return (
     <main className="min-h-screen bg-slate-50 p-8">
       <div className="mx-auto max-w-5xl">
-        <h1 className="mb-6 text-3xl font-bold text-slate-900">
-          My Todos
-        </h1>
-
+        <h1 className="mb-6 text-3xl font-bold text-slate-900">My Todos</h1>
+        <CreateTodoForm />
         {todos.length === 0 ? (
           <p className="text-slate-500">No todos yet. Create your first one!</p>
         ) : (
@@ -44,9 +42,7 @@ function TodosPage() {
                 key={todo.id}
                 className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
               >
-                <h2 className="font-semibold text-slate-900">
-                  {todo.title}
-                </h2>
+                <h2 className="font-semibold text-slate-900">{todo.title}</h2>
 
                 {todo.description && (
                   <p className="mt-2 text-sm text-slate-500">

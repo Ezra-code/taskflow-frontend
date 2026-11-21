@@ -6,3 +6,10 @@ export const getTodos = async (params = {}) => {
 
   return data.data;
 };
+
+
+export const createTodo = async (todoData) => {
+  const { data } = await api.post("/todos", todoData);
+
+  return data.data;
+};
