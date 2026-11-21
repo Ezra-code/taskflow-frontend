@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTodos } from "../hooks/useTodos";
 import CreateTodoForm from "../components/todo/CreateTodoForm";
 import { useToggleTodo } from "../hooks/useToggleTodo";
+import { useDeleteTodo } from "../hooks/useDeleteTodo";
 
 export const Route = createFileRoute("/todos")({
   component: TodosPage,
@@ -15,6 +16,17 @@ function TodosPage() {
     sortOrder: "desc",
   });
   const toggleTodoMutation = useToggleTodo();
+  const deleteTodoMutation = useDeleteTodo();
+
+  const handleDelete = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this todo?",
+    );
+
+    if (confirmed) {
+      deleteTodoMutation.mutate(id);
+    }
+  };
   if (isLoading) {
     return <p className="p-8">Loading your todos...</p>;
   }
@@ -43,18 +55,28 @@ function TodosPage() {
                 key={todo.id}
                 className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
               >
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  disabled={toggleTodoMutation.isPending}
-                  onChange={(event) =>
-                    toggleTodoMutation.mutate({
-                      id: todo.id,
-                      completed: event.target.checked,
-                    })
-                  }
-                  className="h-5 w-5 cursor-pointer accent-indigo-600"
-                />
+                <div className="flex justify-between">
+                  {" "}
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    disabled={toggleTodoMutation.isPending}
+                    onChange={(event) =>
+                      toggleTodoMutation.mutate({
+                        id: todo.id,
+                        completed: event.target.checked,
+                      })
+                    }
+                    className="h-5 w-5 cursor-pointer accent-indigo-600"
+                  />
+                  <button
+                    onClick={() => handleDelete(todo.id)}
+                    disabled={deleteTodoMutation.isPending}
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                  >
+                    Delete
+                  </button>
+                </div>
                 <h2
                   className={`font-semibold ${
                     todo.completed

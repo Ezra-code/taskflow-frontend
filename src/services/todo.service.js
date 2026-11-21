@@ -22,3 +22,9 @@ export const toggleTodoCompletion = async ({ id, completed }) => {
 
   return data.data;
 };
+
+export const deleteTodo = async (id) => {
+  const { data } = await api.delete(`/todos/${id}`);
+
+  return data.data;
+};
