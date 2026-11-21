@@ -13,3 +13,12 @@ export const createTodo = async (todoData) => {
 
   return data.data;
 };
+
+
+export const toggleTodoCompletion = async ({ id, completed }) => {
+  const { data } = await api.patch(`/todos/${id}/completion`, {
+    completed,
+  });
+
+  return data.data;
+};

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTodos } from "../hooks/useTodos";
 import CreateTodoForm from "../components/todo/CreateTodoForm";
+import { useToggleTodo } from "../hooks/useToggleTodo";
 
 export const Route = createFileRoute("/todos")({
   component: TodosPage,
@@ -13,7 +14,7 @@ function TodosPage() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
-
+  const toggleTodoMutation = useToggleTodo();
   if (isLoading) {
     return <p className="p-8">Loading your todos...</p>;
   }
@@ -42,8 +43,27 @@ function TodosPage() {
                 key={todo.id}
                 className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
               >
-                <h2 className="font-semibold text-slate-900">{todo.title}</h2>
-
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  disabled={toggleTodoMutation.isPending}
+                  onChange={(event) =>
+                    toggleTodoMutation.mutate({
+                      id: todo.id,
+                      completed: event.target.checked,
+                    })
+                  }
+                  className="h-5 w-5 cursor-pointer accent-indigo-600"
+                />
+                <h2
+                  className={`font-semibold ${
+                    todo.completed
+                      ? "text-slate-400 line-through"
+                      : "text-slate-900"
+                  }`}
+                >
+                  {todo.title}
+                </h2>
                 {todo.description && (
                   <p className="mt-2 text-sm text-slate-500">
                     {todo.description}
