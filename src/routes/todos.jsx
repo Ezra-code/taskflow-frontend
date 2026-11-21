@@ -12,12 +12,21 @@ export const Route = createFileRoute("/todos")({
 });
 
 function TodosPage() {
-  const { data, isLoading, isError, error } = useTodos({
-    page: 1,
-    limit: 10,
+
+  const [filters, setFilters] = useState({
+    completed: "",
     sortBy: "createdAt",
     sortOrder: "desc",
+    page: 1,
+    limit: 10,
   });
+
+  const { data, isLoading, isError, error } = useTodos(filters);
+
+
+  const todos = data?.data?.todos ?? [];
+  const pagination = data?.pagination;
+
   const [editingTodo, setEditingTodo] = useState(null);
   const toggleTodoMutation = useToggleTodo();
   const deleteTodoMutation = useDeleteTodo();
@@ -43,13 +52,61 @@ function TodosPage() {
     );
   }
 
-  const todos = data?.todos ?? [];
-
   return (
     <main className="min-h-screen bg-slate-50 p-8">
       <div className="mx-auto max-w-5xl">
         <h1 className="mb-6 text-3xl font-bold text-slate-900">My Todos</h1>
         <CreateTodoForm />
+
+        <div className="mb-6 grid gap-4 sm:grid-cols-3">
+          <select
+            value={filters.completed}
+            onChange={(event) =>
+              setFilters((prev) => ({
+                ...prev,
+                completed: event.target.value,
+                page: 1,
+              }))
+            }
+            className="rounded-lg border border-slate-300 bg-white px-4 py-3"
+          >
+            <option value="">All todos</option>
+            <option value="false">Pending</option>
+            <option value="true">Completed</option>
+          </select>
+
+          <select
+            value={filters.sortBy}
+            onChange={(event) =>
+              setFilters((prev) => ({
+                ...prev,
+                sortBy: event.target.value,
+                page: 1,
+              }))
+            }
+            className="rounded-lg border border-slate-300 bg-white px-4 py-3"
+          >
+            <option value="createdAt">Date created</option>
+            <option value="dueDate">Due date</option>
+            <option value="priority">Priority</option>
+          </select>
+
+          <select
+            value={filters.sortOrder}
+            onChange={(event) =>
+              setFilters((prev) => ({
+                ...prev,
+                sortOrder: event.target.value,
+                page: 1,
+              }))
+            }
+            className="rounded-lg border border-slate-300 bg-white px-4 py-3"
+          >
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+
         {todos.length === 0 ? (
           <p className="text-slate-500">No todos yet. Create your first one!</p>
         ) : (

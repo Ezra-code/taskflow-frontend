@@ -2,10 +2,19 @@
 import api from "../lib/api";
 
 export const getTodos = async (params = {}) => {
-  const { data } = await api.get("/todos", { params });
+  const cleanedParams = Object.fromEntries(
+    Object.entries(params).filter(
+      ([, value]) => value !== "" && value !== undefined && value !== null
+    )
+  );
 
-  return data.data;
+  const { data } = await api.get("/todos", {
+    params: cleanedParams,
+  });
+
+  return data;
 };
+
 
 
 export const createTodo = async (todoData) => {
