@@ -78,6 +78,10 @@ function LoginPage() {
               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
               alt=""
               className="h-5 w-5"
+              onClick={() => {
+                window.location.href =
+                  "http://localhost:5000/api/v1/auth/google";
+              }}
             />
             Continue with Google
           </button>
@@ -90,7 +94,8 @@ function LoginPage() {
             <div className="h-px flex-1 bg-slate-200" />
           </div>
 
-          <form className="space-y-5"
+          <form
+            className="space-y-5"
             onSubmit={(e) => {
               e.preventDefault();
               loginMutation.mutate(credentials);
@@ -166,7 +171,7 @@ function LoginPage() {
               className="w-full rounded-xl bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-700"
               disabled={loginMutation.isPending}
             >
-               {loginMutation.isPending ? "Signing in..." : "Sign in"}
+              {loginMutation.isPending ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
