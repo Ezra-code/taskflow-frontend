@@ -1,15 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useAuth } from "../context/AuthContext";
+
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
 });
 
 function DashboardPage() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isAuthenticated } = useAuth();
 
   if (isLoading) {
     return <div>Restoring your session...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
 
   return (
