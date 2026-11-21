@@ -28,3 +28,9 @@ export const deleteTodo = async (id) => {
 
   return data.data;
 };
+
+export const updateTodo = async ({ id, todoData }) => {
+  const { data } = await api.patch(`/todos/${id}`, todoData);
+
+  return data.data;
+};

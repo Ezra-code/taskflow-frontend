@@ -3,7 +3,10 @@ import { useTodos } from "../hooks/useTodos";
 import CreateTodoForm from "../components/todo/CreateTodoForm";
 import { useToggleTodo } from "../hooks/useToggleTodo";
 import { useDeleteTodo } from "../hooks/useDeleteTodo";
-
+import { useState } from "react";
+import { Pencil, X } from "lucide-react";
+import EditTodoForm from "../components/todo/EditTodoForm";
+// import EditTodoForm from "../components/todos/EditTodoForm";
 export const Route = createFileRoute("/todos")({
   component: TodosPage,
 });
@@ -15,6 +18,7 @@ function TodosPage() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
+  const [editingTodo, setEditingTodo] = useState(null);
   const toggleTodoMutation = useToggleTodo();
   const deleteTodoMutation = useDeleteTodo();
 
@@ -69,13 +73,22 @@ function TodosPage() {
                     }
                     className="h-5 w-5 cursor-pointer accent-indigo-600"
                   />
-                  <button
-                    onClick={() => handleDelete(todo.id)}
-                    disabled={deleteTodoMutation.isPending}
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
-                  >
-                    Delete
-                  </button>
+                  <div className="flex justify-evenly">
+                    <button
+                      onClick={() => handleDelete(todo.id)}
+                      disabled={deleteTodoMutation.isPending}
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => setEditingTodo(todo)}
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50 flex items-center justify-between"
+                    >
+                      <Pencil size={16} />
+                      Edit
+                    </button>
+                  </div>
                 </div>
                 <h2
                   className={`font-semibold ${
@@ -97,6 +110,30 @@ function TodosPage() {
                 </p>
               </article>
             ))}
+          </div>
+        )}
+
+        {editingTodo && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="text-xl font-semibold">Edit Todo</h2>
+
+                <button
+                  onClick={() => setEditingTodo(null)}
+                  className="rounded-lg p-2 hover:bg-slate-100"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <EditTodoForm
+                key={editingTodo.id}
+                todo={editingTodo}
+                onCancel={() => setEditingTodo(null)}
+                onSuccess={() => setEditingTodo(null)}
+              />
+            </div>
           </div>
         )}
       </div>
