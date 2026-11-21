@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProileRouteImport } from './routes/proile'
+import { Route as TodosRouteImport } from './routes/todos'
 
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
@@ -28,35 +29,44 @@ const ProileRoute = ProileRouteImport.update({
   path: '/proile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TodosRoute = TodosRouteImport.update({
+  id: '/todos',
+  path: '/todos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/proile': typeof ProileRoute
+  '/todos': typeof TodosRoute
 }
 export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/proile': typeof ProileRoute
+  '/todos': typeof TodosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/proile': typeof ProileRoute
+  '/todos': typeof TodosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/dashboard' | '/login' | '/proile'
+  fullPaths: '/dashboard' | '/login' | '/proile' | '/todos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/dashboard' | '/login' | '/proile'
-  id: '__root__' | '/dashboard' | '/login' | '/proile'
+  to: '/dashboard' | '/login' | '/proile' | '/todos'
+  id: '__root__' | '/dashboard' | '/login' | '/proile' | '/todos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   ProileRoute: typeof ProileRoute
+  TodosRoute: typeof TodosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/todos': {
+      id: '/todos'
+      path: '/todos'
+      fullPath: '/todos'
+      preLoaderRoute: typeof TodosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   ProileRoute: ProileRoute,
+  TodosRoute: TodosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

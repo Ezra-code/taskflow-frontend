@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
+import { setAccessToken as updateApiToken } from "../lib/api";
 import { refreshSession, getCurrentUser } from "../services/auth.service";
 
 const AuthContext = createContext(null);
@@ -29,15 +29,17 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loginUser = ({ user, accessToken }) => {
-    setUser(user);
-    setAccessToken(accessToken);
-  };
+const loginUser = ({ user, accessToken }) => {
+  setUser(user);
+  setAccessToken(accessToken);
+  updateApiToken(accessToken);
+};
 
-  const logoutUser = () => {
-    setUser(null);
-    setAccessToken(null);
-  };
+const logoutUser = () => {
+  setUser(null);
+  setAccessToken(null);
+  updateApiToken(null);
+};
 
 useEffect(() => {
   let isMounted = true;
@@ -49,6 +51,7 @@ useEffect(() => {
       if (isMounted) {
         setAccessToken(session.accessToken);
         setUser(session.user);
+        updateApiToken(session.accessToken);
       }
     } catch {
       if (isMounted) {
@@ -68,6 +71,17 @@ useEffect(() => {
   };
 }, []);
 
+useEffect(() => {
+  const handleSessionExpired = () => {
+    logoutUser();
+  };
+
+  window.addEventListener("auth:session-expired", handleSessionExpired);
+
+  return () => {
+    window.removeEventListener("auth:session-expired", handleSessionExpired);
+  };
+}, []);
   return (
     <AuthContext.Provider
       value={{
