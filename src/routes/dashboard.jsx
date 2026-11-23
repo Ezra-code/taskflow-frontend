@@ -4,6 +4,7 @@ import { logout } from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
 import { CalendarDays } from "lucide-react";
 import { useGoogleCalendar } from "../hooks/useGoogleCalendar";
+import GoogleCalendarConnections from "../components/calendar/GoogleCalendarConnections";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -63,6 +64,7 @@ function DashboardPage() {
           ? "Connecting..."
           : "Connect Google Calendar"}
       </button>
+      <GoogleCalendarConnections />
       <button
         onClick={handleLogout}
         className="mt-6 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
