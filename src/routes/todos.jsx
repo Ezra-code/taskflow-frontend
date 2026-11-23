@@ -12,7 +12,6 @@ export const Route = createFileRoute("/todos")({
 });
 
 function TodosPage() {
-
   const [filters, setFilters] = useState({
     completed: "",
     sortBy: "createdAt",
@@ -22,7 +21,6 @@ function TodosPage() {
   });
 
   const { data, isLoading, isError, error } = useTodos(filters);
-
 
   const todos = data?.data?.todos ?? [];
   const pagination = data?.pagination;
@@ -105,6 +103,21 @@ function TodosPage() {
             <option value="desc">Descending</option>
             <option value="asc">Ascending</option>
           </select>
+          <select
+            value={filters.limit}
+            onChange={(event) =>
+              setFilters((prev) => ({
+                ...prev,
+                limit: Number(event.target.value),
+                page: 1,
+              }))
+            }
+            className="rounded-lg border border-slate-300 bg-white px-4 py-3"
+          >
+            <option value={10}>10 per page</option>
+            <option value={20}>20 per page</option>
+            <option value={50}>50 per page</option>
+          </select>
         </div>
 
         {todos.length === 0 ? (
@@ -167,6 +180,43 @@ function TodosPage() {
                 </p>
               </article>
             ))}
+          </div>
+        )}
+
+        {pagination && (
+          <div className="mt-8 flex items-center justify-between">
+            <p className="text-sm text-slate-500">
+              Page {pagination.page} of {pagination.totalPages} ·{" "}
+              {pagination.total} todos
+            </p>
+
+            <div className="flex gap-2">
+              <button
+                disabled={!pagination.hasPreviousPage}
+                onClick={() =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    page: prev.page - 1,
+                  }))
+                }
+                className="rounded-lg border px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Previous
+              </button>
+
+              <button
+                disabled={!pagination.hasNextPage}
+                onClick={() =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    page: prev.page + 1,
+                  }))
+                }
+                className="rounded-lg border px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
 
