@@ -2,6 +2,48 @@
 import { CalendarDays, RefreshCw, Unplug } from "lucide-react";
 import { useGoogleCalendarAccounts } from "../../hooks/useGoogleCalendarAccounts";
 import { useGoogleCalendar } from "../../hooks/useGoogleCalendar";
+import { useGoogleCalendars } from "../../hooks/useGoogleCalendars";
+import GoogleCalendarEvents from "./GoogleCalendarEvents";
+
+
+
+function GoogleAccountCalendars({ connectionId }) {
+  const { data: calendars = [], isLoading, isError } =
+    useGoogleCalendars(connectionId);
+
+  if (isLoading) {
+    return <p className="mt-3 text-sm text-slate-400">Loading calendars...</p>;
+  }
+
+  if (isError) {
+    return <p className="mt-3 text-sm text-red-500">Failed to load calendars.</p>;
+  }
+
+  return (
+    <div className="mt-3 space-y-2">
+      {calendars.map((calendar) => (
+        <div
+          key={calendar.id}
+          className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2"
+        >
+          <div>
+            <p className="text-sm font-medium text-slate-700">
+              {calendar.summary}
+              {calendar.primary && (
+                <span className="ml-2 text-xs text-indigo-600">Primary</span>
+              )}
+            </p>
+            <p className="text-xs text-slate-400">{calendar.timeZone}</p>
+          </div>
+
+          <span className="text-xs text-slate-500">
+            {calendar.accessRole}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function GoogleCalendarConnections() {
   const {
@@ -65,9 +107,12 @@ export default function GoogleCalendarConnections() {
               </div>
 
               <Unplug size={18} className="text-slate-400" />
+              <GoogleCalendarEvents connectionId={connection.id} />
             </div>
+            
           ))
         )}
+        
       </div>
 
       <button

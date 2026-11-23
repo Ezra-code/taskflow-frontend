@@ -1,4 +1,3 @@
-
 import api from "../lib/api";
 
 export const initiateGoogleCalendarConnection = async () => {
@@ -15,8 +14,22 @@ export const getConnectedGoogleAccounts = async () => {
 
 export const getGoogleCalendars = async (connectionId) => {
   const { data } = await api.get(
-    `/auth/google/calendar/${connectionId}/calendars`
+    `/auth/google/calendar/${connectionId}/calendars`,
   );
 
   return data.data.calendars;
+};
+
+export const getGoogleCalendarEvents = async (
+  connectionId,
+  { timeMin, timeMax },
+) => {
+  const { data } = await api.get(
+    `/auth/google/calendar/${connectionId}/events`,
+    {
+      params: { timeMin, timeMax },
+    },
+  );
+
+  return data.data.events;
 };
